@@ -1,0 +1,76 @@
+import { useState } from "react";
+import { FaSearch, FaUserTie, FaBars, FaTimes } from "react-icons/fa";
+import { IoNotifications } from "react-icons/io5";
+import Netflix_Logo from "../assets/netflix_logo.png"; // change to your path
+
+export default function Navbar({ user, handleSignOut }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const menuItems = ["Home", "TV Shows", "Movies", "New & Popular", "My List"];
+
+  return (
+    <div className="flex justify-between items-center p-2 font-bold text-lg text-white sticky top-0 z-20 bg-black bg-opacity-90">
+      
+      {/* Left section */}
+      <div className="flex items-center">
+        <img src={Netflix_Logo} alt="Netflix Logo" width={120} className="mr-4" />
+
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex">
+          {menuItems.map((item) => (
+            <li key={item} className="m-3 hover:text-red-500 cursor-pointer">{item}</li>
+          ))}
+        </ul>
+
+        {/* Mobile Hamburger */}
+        <button 
+          className="md:hidden text-2xl ml-2" 
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+      </div>
+
+      {/* Right section */}
+      <div className="flex items-center relative">
+        <FaSearch className="m-4 cursor-pointer" />
+        <span className="hidden md:block m-4">Children</span>
+        <IoNotifications className="m-4 text-2xl cursor-pointer" />
+
+        {/* Profile */}
+        <div className="relative">
+          <button 
+            className="m-4 flex items-center text-xl"
+            onClick={() => setProfileOpen(!profileOpen)}
+          >
+            <FaUserTie />
+            <span className="ml-2 hidden sm:block">{user?.displayName}</span>
+          </button>
+
+          {profileOpen && (
+            <div className="absolute right-0 mt-2 w-40 bg-gray-900 text-white rounded shadow-lg">
+              <button 
+                onClick={handleSignOut}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-700"
+              >
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Menu Dropdown */}
+      {menuOpen && (
+        <ul className="absolute top-full left-0 w-full bg-black bg-opacity-95 flex flex-col items-center md:hidden">
+          {menuItems.map((item) => (
+            <li key={item} className="py-3 w-full text-center hover:bg-red-600 cursor-pointer">
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
